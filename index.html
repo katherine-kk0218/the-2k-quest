@@ -2,8 +2,16 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 2K Quest - Dungeon Financeira</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The 2K Quest</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="2K Quest">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,43 +25,36 @@
     
     <section class="stats-panel">
         <div class="stat-box">
-            <span class="stat-label">❤️ VIDA (HP)</span>
+            <span class="stat-label">❤️ HP</span>
             <span id="hp-val" class="stat-value">5</span>
         </div>
         <div class="stat-box">
-            <span class="stat-label">💰 SALDO TOTAL</span>
+            <span class="stat-label">💰 SALDO</span>
             <span class="stat-value">R$ <span id="saldo-val">0</span></span>
         </div>
     </section>
 
     <main class="terminal-area">
         <div id="log-sistema" class="terminal-text">
-            > [MESTRE]: Role o dado para descobrir sua missão financeira de hoje.
+            > [MESTRE]: Role o dado para sua missão...
         </div>
     </main>
 
     <nav class="action-buttons">
-        <button id="btn-rodar" class="btn primary-btn" onclick="rodarDado()">🎲 RODAR DADO (D20)</button>
+        <button id="btn-rodar" class="btn primary-btn" onclick="rodarDado()">🎲 RODAR DADO</button>
         <button id="btn-depositar" class="btn success-btn hidden" onclick="confirmar()">💸 CONFIRMAR DEPÓSITO</button>
         <button id="btn-ressuscitar" class="btn danger-btn hidden" onclick="ressuscitar()">⛪ RESSUSCITAR (R$ 60)</button>
     </nav>
 
-    <section class="info-panel">
-        <div class="history-box">
-            <h3>📜 ÚLTIMAS ENTRADAS</h3>
-            <ul id="lista-historico"></ul>
+    <div class="progress-container">
+        <div class="progress-header">
+            <span>Progresso da Meta</span>
+            <span id="label-progresso">0%</span>
         </div>
-        
-        <div class="progress-box">
-            <div class="progress-header">
-                <span>PROGRESSO DA META</span>
-                <span id="label-progresso">0%</span>
-            </div>
-            <div class="progress-track">
-                <div id="progress-bar" class="progress-fill"></div>
-            </div>
+        <div class="progress-track">
+            <div id="progress-bar" class="progress-fill"></div>
         </div>
-    </section>
+    </div>
 
     <footer>
         <p>Desenvolvido para sua "Tranquilidade Financeira"</p>
