@@ -1,69 +1,71 @@
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playSound(f, d) {
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.frequency.value = f; o.connect(g); g.connect(audioCtx.destination);
-    o.start(); g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + d);
-    o.stop(audioCtx.currentTime + d);
-}
-
-let dungeonData = JSON.parse(localStorage.getItem('Quest2K_Data_V4')) || {
-    saldo: 0, hp: 5, logs: []
+// Sistema de Salvamento Blindado
+let dungeonData = JSON.parse(localStorage.getItem('Quest2K_Data_Final')) || {
+    saldo: 0,
+    hp: 5
 };
 
-const logElement = document.getElementById('log-sistema');
+function salvar() {
+    localStorage.setItem('Quest2K_Data_Final', JSON.stringify(dungeonData));
+    atualizarUI();
+}
 
-function updateUI() {
+function atualizarUI() {
     document.getElementById('hp-val').innerText = dungeonData.hp;
     document.getElementById('saldo-val').innerText = dungeonData.saldo;
-    const progress = Math.min((dungeonData.saldo / 2000) * 100, 100).toFixed(1);
-    document.getElementById('progress-bar').style.width = progress + "%";
-    document.getElementById('label-progresso').innerText = progress + "%";
-    document.getElementById('lista-historico').innerHTML = dungeonData.logs.slice(-3).reverse().map(l => `<li>${l}</li>`).join('');
-    localStorage.setItem('Quest2K_Data_V4', JSON.stringify(dungeonData));
+    
+    let progresso = Math.min((dungeonData.saldo / 2000) * 100, 100).toFixed(1);
+    document.getElementById('progress-bar').style.width = progresso + "%";
+    document.getElementById('label-progresso').innerText = progresso + "%";
 }
 
 function rodarDado() {
-    playSound(260, 0.2);
-    const roll = Math.floor(Math.random() * 20) + 1;
-    let v = 25, h = 0, txt = "[EXPLORAÇÃO]: Caminho seguro. <br> 💰 MISSÃO: Deposite R$ 25,00.";
+    const d = Math.floor(Math.random() * 20) + 1;
+    let v = 0, h = 0, msg = "";
 
-    if (roll <= 5) { v = 10; h = 1; txt = "[EMBOSCADA]: Goblins atacaram! -1 HP. <br> 💰 MISSÃO: Deposite R$ 10,00."; }
-    else if (roll >= 16 && roll <= 19) { v = 50; txt = "[BAÚ]: Você achou um tesouro! <br> 💰 MISSÃO: Deposite R$ 50,00."; }
-    else if (roll === 20) { v = 80; h = -5; txt = "[CRÍTICO]: Sorte divina! Vida restaurada. <br> 💰 MISSÃO: Deposite R$ 80,00."; }
+    // NOVA TABELA EQUILIBRADA
+    if (d <= 4) { // 20% de chance
+        v = 10; h = 1; msg = "[EMBOSCADA]: Goblins roubaram suas provisões! -1 HP. <br> 💰 DEPOSITE: R$ 10,00";
+    } else if (d <= 10) { // 30% de chance
+        v = 25; h = 0; msg = "[EXPLORAÇÃO]: Dia tranquilo de caminhada. <br> 💰 DEPOSITE: R$ 25,00";
+    } else if (d <= 17) { // 35% de chance
+        v = 50; h = 0; msg = "[TESOURO]: Você encontrou um baú de prata! <br> 💰 DEPOSITE: R$ 50,00";
+    } else { // 15% de chance (18, 19, 20)
+        v = 80; h = -5; msg = "[RELÍQUIA]: Sorte divina! Recuperou toda sua vida. <br> 💰 DEPOSITE: R$ 80,00";
+    }
 
-    window.activeQuest = { value: v, damage: h };
-    logElement.innerHTML = `> [DADO]: Girou ${roll}!<br>> ${txt}`;
-    document.getElementById('btn-rodar').classList.add('hidden');
-    document.getElementById('btn-depositar').classList.remove('hidden');
+    window.missaoAtiva = { v, h };
+    document.getElementById('log-sistema').innerHTML = `> [DADO]: Girou ${d}!<br>> ${msg}`;
+    
+    document.getElementById('btn-rodar').style.display = 'none';
+    document.getElementById('btn-depositar').style.display = 'block';
 }
 
 function confirmar() {
-    playSound(400, 0.2);
-    dungeonData.saldo += window.activeQuest.value;
-    if (window.activeQuest.damage === -5) dungeonData.hp = 5;
-    else dungeonData.hp -= window.activeQuest.damage;
-
-    dungeonData.logs.push(`+ R$ ${window.activeQuest.value} (${new Date().toLocaleDateString()})`);
+    dungeonData.saldo += window.missaoAtiva.v;
+    
+    if (window.missaoAtiva.h === -5) dungeonData.hp = 5;
+    else dungeonData.hp -= window.missaoAtiva.h;
 
     if (dungeonData.hp <= 0) {
-        logElement.innerHTML = `> [SISTEMA]: GAME OVER! HP esgotado. <br> ⛪ Pague o Dízimo de R$ 60,00 para voltar.`;
-        document.getElementById('btn-depositar').classList.add('hidden');
-        document.getElementById('btn-ressuscitar').classList.remove('hidden');
+        document.getElementById('log-sistema').innerHTML = "> [SISTEMA]: Você CAIU! <br> ⛪ Pague o dízimo de R$ 60 para ressuscitar.";
+        document.getElementById('btn-depositar').style.display = 'none';
+        document.getElementById('btn-ressuscitar').style.display = 'block';
     } else {
-        document.getElementById('btn-depositar').classList.add('hidden');
-        document.getElementById('btn-rodar').classList.remove('hidden');
-        logElement.innerHTML = `> [SISTEMA]: Depósito confirmado!`;
+        document.getElementById('btn-rodar').style.display = 'block';
+        document.getElementById('btn-depositar').style.display = 'none';
+        document.getElementById('log-sistema').innerHTML = "> [SISTEMA]: Depósito gravado na Dungeon!";
     }
-    updateUI();
+    salvar(); // Salva logo após a ação
 }
 
 function ressuscitar() {
     dungeonData.saldo += 60;
     dungeonData.hp = 5;
-    document.getElementById('btn-ressuscitar').classList.add('hidden');
-    document.getElementById('btn-rodar').classList.remove('hidden');
-    updateUI();
+    document.getElementById('btn-ressuscitar').style.display = 'none';
+    document.getElementById('btn-rodar').style.display = 'block';
+    document.getElementById('log-sistema').innerHTML = "> [SISTEMA]: Você voltou à vida!";
+    salvar();
 }
 
-updateUI();
+// Inicializa a tela ao abrir
+window.onload = atualizarUI;
