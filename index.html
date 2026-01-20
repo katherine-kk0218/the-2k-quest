@@ -5,62 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The 2K Quest</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="2K Quest">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="game-container">
+        <header>
+            <div class="emoji-logo">🏰</div>
+            <h1>THE 2K QUEST</h1>
+            <p class="subtitle">Dungeon Master Financeiro</p>
+        </header>
+        
+        <section class="stats-panel">
+            <div class="stat-box">
+                <span class="stat-label">❤️ VIDA (HP)</span>
+                <span id="hp-val" class="stat-value">5</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">💰 SALDO</span>
+                <span class="stat-value">R$ <span id="saldo-val">0</span></span>
+            </div>
+        </section>
 
-<div id="game-container">
-    <header>
-        <div class="emoji-logo">🏰</div>
-        <h1>THE 2K QUEST</h1>
-        <p class="subtitle">Dungeon Master Financeiro</p>
-    </header>
-    
-    <section class="stats-panel">
-        <div class="stat-box">
-            <span class="stat-label">❤️ HP</span>
-            <span id="hp-val" class="stat-value">5</span>
-        </div>
-        <div class="stat-box">
-            <span class="stat-label">💰 SALDO</span>
-            <span class="stat-value">R$ <span id="saldo-val">0</span></span>
-        </div>
-    </section>
+        <main class="terminal-area">
+            <div id="log-sistema" class="terminal-text">
+                > [MESTRE]: Role o dado para descobrir sua missão...
+            </div>
+        </main>
 
-    <main class="terminal-area">
-        <div id="log-sistema" class="terminal-text">
-            > [MESTRE]: Role o dado para sua missão...
-        </div>
-    </main>
+        <nav class="action-buttons">
+            <button id="btn-rodar" class="btn primary-btn" onclick="rodarDado()">🎲 RODAR DADO</button>
+            <button id="btn-depositar" class="btn success-btn" style="display: none;" onclick="confirmar()">💸 CONFIRMAR DEPÓSITO</button>
+            <button id="btn-ressuscitar" class="btn danger-btn" style="display: none;" onclick="ressuscitar()">⛪ RESSUSCITAR (R$ 60)</button>
+        </nav>
 
-    <nav class="action-buttons">
-        <button id="btn-rodar" class="btn primary-btn" onclick="rodarDado()">🎲 RODAR DADO</button>
-        <button id="btn-depositar" class="btn success-btn hidden" onclick="confirmar()">💸 CONFIRMAR DEPÓSITO</button>
-        <button id="btn-ressuscitar" class="btn danger-btn hidden" onclick="ressuscitar()">⛪ RESSUSCITAR (R$ 60)</button>
-    </nav>
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Progresso da Meta</span>
+                <span id="label-progresso">0%</span>
+            </div>
+            <div class="progress-track">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
 
-    <div class="progress-container">
-        <div class="progress-header">
-            <span>Progresso da Meta</span>
-            <span id="label-progresso">0%</span>
-        </div>
-        <div class="progress-track">
-            <div id="progress-bar" class="progress-fill"></div>
-        </div>
+        <footer>
+            <p>Desenvolvido para sua "Tranquilidade Financeira"</p>
+        </footer>
     </div>
-
-    <footer>
-        <p>Desenvolvido para sua "Tranquilidade Financeira"</p>
-    </footer>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
